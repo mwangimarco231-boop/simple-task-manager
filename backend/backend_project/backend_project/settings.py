@@ -1,15 +1,10 @@
-"""
-Django settings for backend_project project.
-"""
-
 import dj_database_url
 from datetime import timedelta
 from pathlib import Path
 import os
-from dotenv import load_dotenv  # Fixed typo: load_detenv → load_dotenv
+from dotenv import load_dotenv
 
-load_dotenv()  # Fixed typo
-
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -22,7 +17,7 @@ SECRET_KEY = os.getenv(
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
 # Allow hosts for production
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 INSTALLED_APPS = [
@@ -33,7 +28,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'rest_framework_simplejwt',  # ADD THIS - was missing!
+    'rest_framework_simplejwt',
     'corsheaders',
     'tasks',
 ]
@@ -41,7 +36,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # ADD THIS for static files
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -72,7 +67,7 @@ WSGI_APPLICATION = 'backend_project.wsgi.application'
 # Database - uses PostgreSQL on Render, SQLite locally
 DATABASES = {
     'default': dj_database_url.config(
-        default=os.getenv('DATABASE_URL', 'sqlite:///db.sqlite3'),
+        default=os.getenv('DATABASE_URL', f'sqlite:///{BASE_DIR}/db.sqlite3'),
         conn_max_age=600,
         conn_health_checks=True,
     )
@@ -115,12 +110,30 @@ REST_FRAMEWORK = {
     ),
 }
 
-# CORS settings
-CORS_ALLOW_ALL_ORIGINS = DEBUG  # Only allow all in development
-if not DEBUG:
-    CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS', '').split(',')
-
+# CORS settings - Allow all origins for testing
+CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
+
+CORS_ALLOW_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+]
+
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+]
 
 # JWT settings
 SIMPLE_JWT = {
