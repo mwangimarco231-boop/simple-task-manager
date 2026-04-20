@@ -3,7 +3,6 @@ from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from .views import TaskViewSet, RegisterView
 
-
 router = DefaultRouter()
 router.register(r'tasks', TaskViewSet, basename='tasks')
 
