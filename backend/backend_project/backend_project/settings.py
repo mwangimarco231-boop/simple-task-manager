@@ -22,7 +22,7 @@ ALLOWED_HOSTS = ['*']
 if not ALLOWED_HOSTS or ALLOWED_HOSTS == ['']:
     ALLOWED_HOSTS = ['*']  # Only for development
 
-# Application definition
+# Application defination
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
