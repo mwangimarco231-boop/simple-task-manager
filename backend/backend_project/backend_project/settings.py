@@ -129,6 +129,10 @@ REST_FRAMEWORK = {
 # CORS settings - Restrict to your frontend only
 CORS_ALLOW_ALL_ORIGINS = False  # Don't allow all origins!
 CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS', '').split(',')
+if not CORS_ALLOWED_ORIGINS or CORS_ALLOWED_ORIGINS == ['']:
+    CORS_ALLOWED_ORIGINS = ['https://simple-task-manager-jet.vercel.app']
+
+
 CORS_ALLOW_CREDENTIALS = True
 
 
