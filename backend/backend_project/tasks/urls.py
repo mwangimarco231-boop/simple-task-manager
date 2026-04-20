@@ -11,5 +11,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', api_home),  # This handles the root /api/ URL
     # This handles /api/tasks/, /api/register/, etc.
-    path('api/', include('tasks.urls')),
+    path('', include('tasks.urls')),
 ]
