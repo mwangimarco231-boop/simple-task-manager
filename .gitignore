@@ -102,3 +102,6 @@ desktop.ini
 *.env.production
 frontend/.env*
 backend/.env*
+venv/
+.venv/
+backend/venv/
