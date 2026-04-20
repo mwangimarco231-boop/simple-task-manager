@@ -127,7 +127,7 @@ REST_FRAMEWORK = {
 }
 
 # CORS settings - Restrict to your frontend only
-CORS_ALLOW_ALL_ORIGINS = True  # Don't allow all origins!
+CORS_ALLOW_ALL_ORIGINS = False  # Don't allow all origins!
 CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS', '').split(',')
 CORS_ALLOW_CREDENTIALS = True
 
