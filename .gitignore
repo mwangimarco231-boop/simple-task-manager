@@ -92,3 +92,13 @@ desktop.ini
 .env
 .env
 *.env
+
+# Environment files - NEVER commit!
+.env
+.env.*
+*.env
+*.env.local
+*.env.development
+*.env.production
+frontend/.env*
+backend/.env*
