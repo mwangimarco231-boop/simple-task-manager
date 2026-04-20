@@ -1,4 +1,3 @@
-from django.db import connection
 import dj_database_url
 from datetime import timedelta
 from pathlib import Path
@@ -147,28 +146,3 @@ SIMPLE_JWT = {
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-
-def create_tasks_table():
-    try:
-        with connection.cursor() as cursor:
-            cursor.execute("""
-                CREATE TABLE IF NOT EXISTS tasks_task (
-                    id SERIAL PRIMARY KEY,
-                    user_id INTEGER NOT NULL,
-                    title VARCHAR(200) NOT NULL,
-                    description TEXT,
-                    completed BOOLEAN DEFAULT FALSE,
-                    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-                );
-            """)
-            print("✅ Tasks table created successfully!")
-    except Exception as e:
-        print(f"Table might already exist: {e}")
-
-
-# Call the function when Django starts
-try:
-    create_tasks_table()
-except:
-    pass
