@@ -18,9 +18,9 @@ if not SECRET_KEY:
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 # Allow hosts - restrict to your actual domains
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
 if not ALLOWED_HOSTS or ALLOWED_HOSTS == ['']:
-    ALLOWED_HOSTS = ['*']  # Only for development
+    ALLOWED_HOSTS = ['simple-task-manager-8noc.onrender.com']
 
 # Application defination
 INSTALLED_APPS = [
@@ -127,7 +127,7 @@ REST_FRAMEWORK = {
 }
 
 # CORS settings - Restrict to your frontend only
-CORS_ALLOW_ALL_ORIGINS = True  # Don't allow all origins!
+CORS_ALLOW_ALL_ORIGINS = False  # Don't allow all origins!
 CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS', '').split(',')
 CORS_ALLOW_CREDENTIALS = True
 
