@@ -176,3 +176,9 @@ if not DEBUG:
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# CSRF trusted origins (temporary for testing)
+CSRF_TRUSTED_ORIGINS = [
+    'https://simple-task-manager-jet.vercel.app',
+    'https://simple-task-manager-8noc.onrender.com',
+]
