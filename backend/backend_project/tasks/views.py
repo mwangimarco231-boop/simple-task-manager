@@ -1,3 +1,5 @@
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework import viewsets, generics, status
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
@@ -41,6 +43,7 @@ class TaskViewSet(viewsets.ModelViewSet):
 # Registration View (for creating new users)
 
 
+@method_decorator(csrf_exempt, name='dispatch')
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     permission_classes = [AllowAny]
@@ -56,5 +59,4 @@ class RegisterView(generics.CreateAPIView):
                 "message": "User created successfully"
             }, status=status.HTTP_201_CREATED)
         else:
-            # Return detailed validation errors (e.g., password too short, username exists)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
