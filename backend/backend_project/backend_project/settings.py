@@ -18,9 +18,9 @@ if not SECRET_KEY:
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 # Allow hosts - restrict to your actual domains
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
+ALLOWED_HOSTS = ['*']
 if not ALLOWED_HOSTS or ALLOWED_HOSTS == ['']:
-    ALLOWED_HOSTS = ['simple-task-manager-8noc.onrender.com']
+    ALLOWED_HOSTS = ['*']  # Only for development
 
 # Application defination
 INSTALLED_APPS = [
