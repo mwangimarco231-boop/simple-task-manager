@@ -1,11 +1,12 @@
-from rest_framework import viewsets, generics
+from rest_framework import viewsets, generics, status
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
-from rest_framework import status
 from .models import Task
 from .serializers import TaskSerializer, UserSerializer
 from django.contrib.auth.models import User
 import traceback
+
+# Task ViewSet (for CRUD operations on tasks)
 
 
 class TaskViewSet(viewsets.ModelViewSet):
@@ -13,6 +14,7 @@ class TaskViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
+        # Only return tasks belonging to the logged-in user
         return Task.objects.filter(user=self.request.user)
 
     def perform_create(self, serializer):
@@ -36,8 +38,23 @@ class TaskViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
+# Registration View (for creating new users)
+
 
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     permission_classes = [AllowAny]
     serializer_class = UserSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.save()
+            return Response({
+                "username": user.username,
+                "email": user.email,
+                "message": "User created successfully"
+            }, status=status.HTTP_201_CREATED)
+        else:
+            # Return detailed validation errors (e.g., password too short, username exists)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
