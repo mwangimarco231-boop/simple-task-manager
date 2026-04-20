@@ -1,15 +1,13 @@
 from rest_framework import viewsets, status
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from .models import Task
 from .serializers import TaskSerializer, UserSerializer
-from django.contrib.auth.models import User
-import traceback
-
-# Task ViewSet (for CRUD operations on tasks)
 
 
 class TaskViewSet(viewsets.ModelViewSet):
@@ -20,27 +18,7 @@ class TaskViewSet(viewsets.ModelViewSet):
         return Task.objects.filter(user=self.request.user)
 
     def perform_create(self, serializer):
-        try:
-            serializer.save(user=self.request.user)
-        except Exception as e:
-            print(f"ERROR in perform_create: {str(e)}")
-            print(traceback.format_exc())
-            raise
-
-    def create(self, request, *args, **kwargs):
-        try:
-            print(f"Creating task for user: {request.user}")
-            print(f"Request data: {request.data}")
-            return super().create(request, *args, **kwargs)
-        except Exception as e:
-            print(f"ERROR in create: {str(e)}")
-            print(traceback.format_exc())
-            return Response(
-                {'error': str(e), 'traceback': traceback.format_exc()},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
-# Register View (for creating new users) - CSRF exempt
+        serializer.save(user=self.request.user)
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -48,17 +26,16 @@ class RegisterView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
-        print("RegisterView POST hit!")
-        print(f"Request data: {request.data}")
+        username = request.data.get('username')
+        password = request.data.get('password')
+        email = request.data.get('email', '')
 
-        serializer = UserSerializer(data=request.data)
-        if serializer.is_valid():
-            user = serializer.save()
-            return Response({
-                "username": user.username,
-                "email": user.email,
-                "message": "User created successfully"
-            }, status=status.HTTP_201_CREATED)
-        else:
-            print(f"Serializer errors: {serializer.errors}")
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        if not username or not password:
+            return Response({'error': 'Username and password required'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if User.objects.filter(username=username).exists():
+            return Response({'error': 'Username already exists'}, status=status.HTTP_400_BAD_REQUEST)
+
+        user = User.objects.create_user(
+            username=username, email=email, password=password)
+        return Response({'username': user.username, 'message': 'User created successfully'}, status=status.HTTP_201_CREATED)

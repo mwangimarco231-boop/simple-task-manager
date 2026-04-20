@@ -131,6 +131,22 @@ CORS_ALLOW_ALL_ORIGINS = True  # Don't allow all origins!
 CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS', '').split(',')
 CORS_ALLOW_CREDENTIALS = True
 
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://simple-task-manager-jet.vercel.app',
+    'http://localhost:5173',
+]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.AllowAny',  # Temporarily allow all for testing
+    ),
+}
+
+
 CORS_ALLOW_METHODS = [
     'DELETE',
     'GET',
